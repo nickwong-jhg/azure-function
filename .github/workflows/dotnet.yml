@@ -14,6 +14,10 @@ env:
   AZURE_FUNCTIONAPP_NAME: github-test-app # set this to the name of your azure function app resource
   AZURE_FUNCTION_PROJ_PATH: src/FunctionApp  # set this to the path to your function app project
   ROOT_SOLUTION_PATH: src # set this to the root path of your solution/project file
+  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
+  DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
+  RESOURCE_GROUP: 'github-poc'  # Replace with your Azure Resource Group name
+  REGION: 'Australia East'  # Replace with the Azure region for your function app
 
 jobs:
   build:
@@ -64,6 +68,16 @@ jobs:
       - name: Build Function App for Release
         run: dotnet build ${{ env.AZURE_FUNCTION_PROJ_PATH }} --configuration Release
       
+      - name: Upsert the Function App (Create or Update)
+        run: |
+          # Attempt to create the Function App. If it already exists, it won't error out.
+          az functionapp create --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
+                                 --resource-group ${{ env.RESOURCE_GROUP }} \
+                                 --plan ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
+                                 --runtime dotnet \
+                                 --runtime-version 8 \
+                                 --region ${{ env.REGION }} || echo "Function App exists, skipping creation."
+
       - name: Install Azure Functions Core Tools
         run: npm i -g azure-functions-core-tools@3 --unsafe-perm true
       
