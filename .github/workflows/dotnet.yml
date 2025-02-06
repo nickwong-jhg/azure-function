@@ -37,79 +37,12 @@ jobs:
     
       - name: Get the latest source code commit
         uses: actions/checkout@v2        
-              
-      - name: List project files before build.settings.json rename
-        run: tree
-        working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
         
-      - name: Rename build.settings.json to local.settings.json
-        run: mv build.settings.json local.settings.json
-        working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
-      
-      - name: List project files after build.settings.json rename
-        run: tree
-        working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-      - name: Restore dependencies
-        run: dotnet restore
-        working-directory: ${{ env.ROOT_SOLUTION_PATH }}
-
-      - name: Build for Testing
-        run: dotnet build --no-restore
-        working-directory: ${{ env.ROOT_SOLUTION_PATH }}
-      
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
-        working-directory: ${{ env.ROOT_SOLUTION_PATH }}
-      
-      - name: Clean debug configuration output
-        run: dotnet clean
-        working-directory: ${{ env.ROOT_SOLUTION_PATH }}
-            
-      - name: Build Function App for Release
-        run: dotnet build ${{ env.AZURE_FUNCTION_PROJ_PATH }} --configuration Release
-      
-      - name: Create or Update the Storage Account
-        run: |
-          echo "Creating or updating the storage account..."
-          az storage account create \
-            --name ${{ env.STORAGE_ACCOUNT_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --location ${{ env.REGION }} \
-            --sku ${{ env.STORAGE_ACCOUNT_SKU }} \
-            --kind StorageV2 
-
-      - name: Create or Update the App Service Plan
-        run: |
-          echo "Creating or updating the App Service Plan..."
-          az appservice plan create \
-            --name ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --location ${{ env.REGION }} \
-            --sku ${{ env.APP_SERVICE_PLAN_SKU }} \
-            --is-linux 
-
-      - name: Upsert the Function App (Create or Update)
-        run: |
-          # Attempt to create the Function App. If it already exists, it won't error out.
-          az functionapp create --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
-                                 --resource-group ${{ env.RESOURCE_GROUP }} \
-                                 --plan ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
-                                 --runtime dotnet \
-                                 --runtime-version 8 \
-                                 --storage-account ${{ env.STORAGE_ACCOUNT_NAME }}
-                                 --region ${{ env.REGION }} || echo "Function App exists, skipping creation."
-
-      - name: Install Azure Functions Core Tools
-        run: npm i -g azure-functions-core-tools@3 --unsafe-perm true
-      
-      - name: Publish Azure Function App
-        env:
-          DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true  # Set the environment variable
-        run: 
-          func azure functionapp publish ${{ env.AZURE_FUNCTIONAPP_NAME }} working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./main.bicep
+          parameters: ''
+          failOnStdErr: false
