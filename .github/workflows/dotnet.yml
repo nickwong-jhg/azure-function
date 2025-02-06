@@ -10,16 +10,9 @@ on:
   workflow_dispatch:
   
 env:
-  AZURE_FUNCTIONAPP_NAME: fa-github-poc # set this to the name of your azure function app resource
-  AZURE_FUNCTION_PROJ_PATH: src/FunctionApp  # set this to the path to your function app project
-  ROOT_SOLUTION_PATH: src # set this to the root path of your solution/project file
   AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
   RESOURCE_GROUP: 'github-poc'  # Replace with your Azure Resource Group name
-  STORAGE_ACCOUNT_NAME: 'sagithubpoc'
-  STORAGE_ACCOUNT_SKU: 'Standard_LRS'
-  REGION: 'australiaeast'  # Replace with the Azure region for your function app
-  APP_SERVICE_PLAN_SKU: B1  # App Service Plan SKU, e.g., S1 (Standard), P1V2 (Premium), etc.
 
 jobs:
   build:
@@ -43,6 +36,6 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template: ./main.bicep
+          template: ./bicep/main.bicep
           parameters: ''
           failOnStdErr: false
