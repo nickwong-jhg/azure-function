@@ -10,7 +10,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-10
 }
 
 resource appInsightsComponents 'Microsoft.Insights/components@2020-02-02' = {
-  name: resourceNames.appInsightsName
+  name: 'ais-${resourceNames.resourceGroup}'
   location: location
   kind: 'web'
   properties: {
