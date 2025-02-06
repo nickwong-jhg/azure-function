@@ -25,10 +25,6 @@ jobs:
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
       
-      - name: Set 'set -e' to stop the job on any failure
-        run: |
-          set -e  # This applies to all commands in this step and subsequent steps in this job
-          
       - name: Authenticate to Azure as a Service Principal
         uses: azure/login@v1
         with:
