@@ -14,7 +14,8 @@ env:
   ROOT_SOLUTION_PATH: src # set this to the root path of your solution/project file
   AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
-  RESOURCE_GROUP: 'github-poc'  # Replace with your Azure Resource Group name
+  APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
+  ENVIRONMENT: 'dev'  # Replace with your environment name
 
 jobs:
   build:
@@ -37,9 +38,17 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./bicep/resourceGroup.bicep
+          parameters: 'resourceGroupName=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}'
+          failOnStdErr: false
+
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
           template: ./bicep/main.bicep
-          parameters: ''
+          parameters: 'environment=${{ env.ENVIRONMENT }}'
           failOnStdErr: false
 
       - name: 'Checkout GitHub Action'

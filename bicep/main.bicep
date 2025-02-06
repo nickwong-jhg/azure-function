@@ -16,7 +16,7 @@ param dateNow string = utcNow('ddMMyyyyHHmmss')
 
 // Variables
 //dateNow is a fall back if there is no buildNumber available on the resourceGroup Tag. 
-var deploymentSuffix = contains(resourceGroup().tags, 'buildNumber') ? resourceGroup().tags.buildNumber : dateNow
+var deploymentSuffix = resourceGroup().tags.?buildNumber ?? dateNow
 
 var conventions   = {
   location        : location
