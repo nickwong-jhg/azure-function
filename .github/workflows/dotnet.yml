@@ -38,6 +38,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
           template: ./bicep/resourceGroup.bicep
           parameters: 'resourceGroupName=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}'
           failOnStdErr: false
