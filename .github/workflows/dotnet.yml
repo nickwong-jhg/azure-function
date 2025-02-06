@@ -1,4 +1,4 @@
-name: Test and Deploy (Functions Core Tooling)
+name: Test and Deploy (ubuntu runner)
 
 on:
   push:
