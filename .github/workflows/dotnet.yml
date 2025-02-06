@@ -17,12 +17,12 @@ env:
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
   APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
   ENVIRONMENT: 'dev'  # Replace with your environment name
-  RESOURCE_GROUP_NAME: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    env:
+      RESOURCE_GROUP_NAME: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
     steps:
       - name: Set 'set -e' to stop the job on any failure
         run: |
