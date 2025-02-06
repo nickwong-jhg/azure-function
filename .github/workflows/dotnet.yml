@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
@@ -66,7 +66,7 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
 
-      - name: 'Run Azure Functions Action'
+      - name: 'Publish Azure Functions Changes'
         uses: Azure/functions-action@v1
         id: fa
         with:
