@@ -18,6 +18,8 @@ env:
   APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
   ENVIRONMENT: 'dev'  # Replace with your environment name
 
+resourceGroupName: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,13 +40,13 @@ jobs:
       # Create Resource Group (if not exists)
       - name: Create Resource Group
         run: |
-          az group create --name ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }} --location ${{ env.REGION }} --tags costCentre=jhg-integration --output none
+          az group create --name ${{ resourceGroupName }} --location ${{ env.REGION }} --tags costCentre=jhg-integration --output none
 
       - name: Deploy Bicep file
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}
+          resourceGroupName: ${{ resourceGroupName }}
           template: ./bicep/main.bicep
           parameters: 'environment=${{ env.ENVIRONMENT }}'
           failOnStdErr: false
@@ -68,5 +70,5 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: fa-${{ env.RESOURCE_GROUP }}
+          app-name: fa-${{ resourceGroupName }}
           package: '${{ env.AZURE_FUNCTION_PROJ_PATH }}/output'
