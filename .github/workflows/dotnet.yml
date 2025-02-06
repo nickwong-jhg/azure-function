@@ -19,7 +19,7 @@ env:
   RESOURCE_GROUP: 'github-poc'  # Replace with your Azure Resource Group name
   STORAGE_ACCOUNT_NAME: 'sa-github-poc'
   STORAGE_ACCOUNT_SKU: 'Standard_LRS'
-  REGION: 'Australia East'  # Replace with the Azure region for your function app
+  REGION: 'australiaeast'  # Replace with the Azure region for your function app
 
 jobs:
   build:
@@ -92,7 +92,7 @@ jobs:
                                  --plan ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
                                  --runtime dotnet \
                                  --runtime-version 8 \
-                                 --storage-account {{ env.STORAGE_ACCOUNT_NAME }}
+                                 --storage-account ${{ env.STORAGE_ACCOUNT_NAME }}
                                  --region ${{ env.REGION }} || echo "Function App exists, skipping creation."
 
       - name: Install Azure Functions Core Tools
