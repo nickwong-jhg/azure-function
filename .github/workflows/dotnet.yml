@@ -17,6 +17,8 @@ env:
   AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
   RESOURCE_GROUP: 'github-poc'  # Replace with your Azure Resource Group name
+  STORAGE_ACCOUNT_NAME: 'sa-github-poc'
+  STORAGE_ACCOUNT_SKU: 'Standard_LRS'
   REGION: 'Australia East'  # Replace with the Azure region for your function app
 
 jobs:
@@ -24,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Set 'set -e' to stop the job on any failure
+        run: |
+          set -e  # This applies to all commands in this step and subsequent steps in this job
+          
       - name: Authenticate to Azure as a Service Principal
         uses: azure/login@v1
         with:
@@ -68,6 +74,16 @@ jobs:
       - name: Build Function App for Release
         run: dotnet build ${{ env.AZURE_FUNCTION_PROJ_PATH }} --configuration Release
       
+      - name: Create or Update the Storage Account
+        run: |
+          echo "Creating or updating the storage account..."
+          az storage account create \
+            --name ${{ env.STORAGE_ACCOUNT_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --location ${{ env.REGION }} \
+            --sku ${{ env.STORAGE_ACCOUNT_SKU }} \
+            --kind StorageV2 || echo "Storage account exists, skipping creation."
+
       - name: Upsert the Function App (Create or Update)
         run: |
           # Attempt to create the Function App. If it already exists, it won't error out.
@@ -76,6 +92,7 @@ jobs:
                                  --plan ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
                                  --runtime dotnet \
                                  --runtime-version 8 \
+                                 --storage-account {{ env.STORAGE_ACCOUNT_NAME }}
                                  --region ${{ env.REGION }} || echo "Function App exists, skipping creation."
 
       - name: Install Azure Functions Core Tools
