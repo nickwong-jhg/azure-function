@@ -20,9 +20,7 @@ env:
   STORAGE_ACCOUNT_NAME: 'sa-github-poc'
   STORAGE_ACCOUNT_SKU: 'Standard_LRS'
   REGION: 'australiaeast'  # Replace with the Azure region for your function app
-  APP_SERVICE_PLAN_NAME: ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan  # Replace with your desired App Service Plan name
   APP_SERVICE_PLAN_SKU: B1  # App Service Plan SKU, e.g., S1 (Standard), P1V2 (Premium), etc.
-  APP_SERVICE_PLAN_LOCATION: ${{ env.REGION }}  # Azure region for the App Service Plan
 
 jobs:
   build:
@@ -91,9 +89,9 @@ jobs:
         run: |
           echo "Creating or updating the App Service Plan..."
           az appservice plan create \
-            --name ${{ env.APP_SERVICE_PLAN_NAME }} \
+            --name ${{ env.AZURE_FUNCTIONAPP_NAME }}-plan \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --location ${{ env.APP_SERVICE_PLAN_LOCATION }} \
+            --location ${{ env.REGION }} \
             --sku ${{ env.APP_SERVICE_PLAN_SKU }} \
             --is-linux || echo "App Service Plan exists, skipping creation."
 
