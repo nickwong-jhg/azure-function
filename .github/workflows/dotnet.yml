@@ -111,6 +111,5 @@ jobs:
       - name: Publish Azure Function App
         env:
           DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true  # Set the environment variable
-        run: |
-          func azure functionapp publish ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
+        run: 
+          func azure functionapp publish ${{ env.AZURE_FUNCTIONAPP_NAME }} working-directory: ${{ env.AZURE_FUNCTION_PROJ_PATH }}
