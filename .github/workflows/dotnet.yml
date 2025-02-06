@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
   
 env:
-  AZURE_FUNCTIONAPP_NAME: github-test-app # set this to the name of your azure function app resource
+  AZURE_FUNCTIONAPP_NAME: fa-github-poc # set this to the name of your azure function app resource
   AZURE_FUNCTION_PROJ_PATH: src/FunctionApp  # set this to the path to your function app project
   ROOT_SOLUTION_PATH: src # set this to the root path of your solution/project file
   AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
