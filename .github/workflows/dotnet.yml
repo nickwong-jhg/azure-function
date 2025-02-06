@@ -30,6 +30,11 @@ jobs:
         run: |
           set -e  # This applies to all commands in this step and subsequent steps in this job
           
+      - name: Install ICU dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libicu-dev
+          
       - name: Authenticate to Azure as a Service Principal
         uses: azure/login@v1
         with:
