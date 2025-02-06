@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
@@ -36,7 +36,7 @@ jobs:
       # Create Resource Group (if not exists)
       - name: Create Resource Group
         run: |
-          az group create --name ${{ env.RESOURCE_GROUP_NAME }} --location ${{ env.REGION }} --tags costCentre=jhg-integration --output none
+          az group create --resource-group ${{ env.RESOURCE_GROUP_NAME }} --location ${{ env.REGION }} --tags costCentre=jhg-integration --output none
 
       - name: Deploy Bicep file
         uses: azure/arm-deploy@v1
