@@ -10,6 +10,7 @@ env:
   REGION: 'australiaeast'
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
   APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
+  ENVIRONMENT: dev
 
 jobs:
   build:
@@ -18,11 +19,11 @@ jobs:
     steps:
 
       - name: Set env
-        run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
+        run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
       
       - name: 'Load .env file'
         id: dotenv
-        uses: ./.github/actions/dotenv-action --path ".env/${{ vars.ENVIRONMENT }}.env"
+        uses: ./.github/actions/dotenv-action --path ".env/${{ env.ENVIRONMENT }}.env"
 
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
@@ -46,7 +47,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
           template: ./bicep/main.bicep
-          parameters: 'environment=${{ vars.ENVIRONMENT }}'
+          parameters: 'environment=${{ env.ENVIRONMENT }}'
           failOnStdErr: false
 
       - name: 'Checkout GitHub Action'
