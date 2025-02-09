@@ -22,7 +22,7 @@ jobs:
       
       - name: 'Load .env file'
         id: dotenv
-        uses: ./.github/actions/dotenv-action --path ".env/${{ vars.ENVIRONMENT }}.env"
+        uses: ./.github/actions/dotenv-action --path ./env/dev.env
 
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
