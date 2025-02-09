@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
+
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
       
@@ -27,11 +28,10 @@ jobs:
       - name: Get the latest source code commit
         uses: actions/checkout@v2        
         
-        
       - name: 'Load .env file'
-      uses: falti/dotenv-action@v1.1.4
-      with:
-        path: ./env/dev.env
+        uses: falti/dotenv-action@v1.1.4
+        with:
+          path: ./env/dev.env
 
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
