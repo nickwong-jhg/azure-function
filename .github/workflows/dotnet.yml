@@ -16,11 +16,11 @@ env:
   REGION: 'australiaeast'
   DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
   APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
-  ENVIRONMENT: 'dev'  # Replace with your environment name
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
