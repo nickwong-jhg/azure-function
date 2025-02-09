@@ -12,7 +12,7 @@ env:
   APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
 
 jobs:
-  build:
+  build dev:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -37,7 +37,7 @@ jobs:
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
   
-    build:
+    build uat:
     runs-on: ubuntu-latest
     environment: uat
     steps:
