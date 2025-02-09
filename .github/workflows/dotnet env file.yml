@@ -1,0 +1,72 @@
+name: Test and Deploy (ubuntu runner)
+
+on:
+  workflow_dispatch:
+  
+env:
+  AZURE_FUNCTION_PROJ_PATH: src/FunctionApp  # set this to the path to your function app project
+  ROOT_SOLUTION_PATH: src # set this to the root path of your solution/project file
+  AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION }}  # Azure subscription ID stored in GitHub secrets
+  REGION: 'australiaeast'
+  DOTNET_VERSION: '8.x'  # Specify your .NET SDK version
+  APP_NAME: 'github-poc'  # Replace with your Azure Resource Group name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+
+      - name: Set env
+        run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
+      
+      - name: 'Load .env file'
+        id: dotenv
+        uses: ./.github/actions/dotenv-action --path .env/${{ vars.ENVIRONMENT }}.env
+
+      - name: 'Echo'
+        run: echo ${{ steps.dotenv.outputs.Note }}
+
+      - name: Authenticate to Azure as a Service Principal
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDS_FUNCTION_APP }}
+    
+      - name: Get the latest source code commit
+        uses: actions/checkout@v2        
+        
+      # Create Resource Group (if not exists)
+      - name: Create Resource Group
+        run: |
+          az group create --name ${{ env.RESOURCE_GROUP_NAME }} --location ${{ env.REGION }} --tags costCentre=jhg-integration --output none
+
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+          template: ./bicep/main.bicep
+          parameters: 'environment=${{ vars.ENVIRONMENT }}'
+          failOnStdErr: false
+
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v3
+
+      - name: Setup DotNet 8 Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: 'Resolve Project Dependencies Using Dotnet'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTION_PROJ_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Publish Azure Functions Changes'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: fa-${{ env.RESOURCE_GROUP_NAME }}
+          package: '${{ env.AZURE_FUNCTION_PROJ_PATH }}/output'
