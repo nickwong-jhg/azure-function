@@ -1,4 +1,4 @@
-name: Test and Deploy (Windows Runner)
+name: dotnet win
 
 on:
   workflow_dispatch:

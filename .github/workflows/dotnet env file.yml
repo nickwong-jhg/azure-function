@@ -1,4 +1,4 @@
-name: Test and Deploy (ubuntu runner)
+name: dotnet env file
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
       
       - name: 'Load .env file'
         id: dotenv
-        uses: ./.github/actions/dotenv-action --path .env/${{ vars.ENVIRONMENT }}.env
+        uses: ./.github/actions/dotenv-action --path ".env/${{ vars.ENVIRONMENT }}.env"
 
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
