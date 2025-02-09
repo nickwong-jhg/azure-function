@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-
       - name: Set env
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
       
