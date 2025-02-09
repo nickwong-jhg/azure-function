@@ -21,8 +21,8 @@ jobs:
         run: echo "RESOURCE_GROUP_NAME=${{ env.APP_NAME }}-${{ vars.ENVIRONMENT }}" >> $GITHUB_ENV
       
       - name: 'Load .env file'
-        id: dotenv
-        uses: ./.github/actions/dotenv-action --path ./env/dev.env
+        path: ./env/dev.env
+        uses: falti/dotenv-action@v1.1.4
 
       - name: 'Echo'
         run: echo ${{ steps.dotenv.outputs.Note }}
