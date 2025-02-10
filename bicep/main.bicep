@@ -55,12 +55,11 @@ module appInsightsDeployment 'modules/appInsights.bicep' = {
 }
 
 // modules
-module appServiceWsPlanDeployment 'modules/appServicePlan.bicep' = {
+module appServiceWsPlanDeployment 'modules/appServicePlanLogicApp.bicep' = {
   name: 'asp-ws-module'
   params: {
     conventions: conventions
     resourceGroupName: resourceNames.resourceGroup 
-    appServicePlanSkuName: 'WS1'
   }
 }
 
@@ -77,12 +76,11 @@ module logicAppDeployment 'modules/logicAppStd.bicep' = {
 
 
 // modules
-module appServicePlanDeployment 'modules/appServicePlan.bicep' = {
+module appServicePlanDeployment 'modules/appServicePlanFunction.bicep' = {
   name: 'asp-func-module'
   params: {
     conventions: conventions
     resourceGroupName: resourceNames.resourceGroup 
-    appServicePlanSkuName: 'WS1'
   }
 }
 

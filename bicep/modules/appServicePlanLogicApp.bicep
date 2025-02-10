@@ -5,14 +5,14 @@ param conventions object
 param resourceGroupName string 
 
 @description('App Service Plan SKU Name')
-param appServicePlanSkuName string = 'Y1'
+param appServicePlanSkuName string = 'W1'
 
 @description('App Service Plan SKU Tier')
 param appServicePlanSkuTier string = 'Dynamic'
 
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
-  name: '${resourceGroupName}-${appServicePlanSkuName}-${appServicePlanSkuTier}-plan'
+  name: '${resourceGroupName}-la-plan'
   location: conventions.location
   tags: conventions.baseTags
   sku: {
