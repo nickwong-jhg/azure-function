@@ -65,7 +65,7 @@ module appServicePlanDeployment 'modules/appServicePlan.bicep' = {
 }
 
 module logicAppDeployment 'modules/logicAppStd.bicep' = {
-  name: take('fa-module-${deploymentSuffix}', 64)
+  name: take('lap-module-${deploymentSuffix}', 64)
   params: {
     conventions: conventions
     resourceNames: resourceNames
