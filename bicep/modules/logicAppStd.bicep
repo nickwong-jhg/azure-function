@@ -31,13 +31,13 @@ resource logicApp 'Microsoft.Web/sites@2021-02-01' = {
       siteConfig: {
           appSettings: [
               { name: 'APP_KIND', value: 'workflowApp' }
-              { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', appInsightsConnectionString }
+              { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsightsConnectionString }
               { name: 'AzureFunctionsJobHost__extensionBundle__id', value: 'Microsoft.Azure.Functions.ExtensionBundle.Workflows' }
               { name: 'AzureFunctionsJobHost__extensionBundle__version', value: '[1.*, 2.0.0)' }
-              { name: 'AzureWebJobsStorage', storageAccountConnectionString }
+              { name: 'AzureWebJobsStorage', value: storageAccountConnectionString }
               { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' }
               { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'node' }
-              { name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING', storageAccountConnectionString }
+              { name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING', value: storageAccountConnectionString }
               { name: 'WEBSITE_CONTENTSHARE', value: toLower(logicAppName) }
               { name: 'WEBSITE_NODE_DEFAULT_VERSION', value: '~16' }
               { name: 'Workflows.my-workflow.FlowState', value: 'Disabled' }
