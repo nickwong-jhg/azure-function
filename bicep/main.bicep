@@ -55,8 +55,8 @@ module appInsightsDeployment 'modules/appInsights.bicep' = {
 }
 
 // modules
-module appServicePlanDeployment 'modules/appServicePlan.bicep' = {
-  name: 'asp-module'
+module appServiceWsPlanDeployment 'modules/appServicePlan.bicep' = {
+  name: 'asp-ws-module'
   params: {
     conventions: conventions
     resourceGroupName: resourceNames.resourceGroup 
@@ -69,9 +69,20 @@ module logicAppDeployment 'modules/logicAppStd.bicep' = {
   params: {
     conventions: conventions
     resourceNames: resourceNames
-    appServicePlanId: appServicePlanDeployment.outputs.id
+    appServicePlanId: appServiceWsPlanDeployment.outputs.id
     storageAccountName: storageAccountDeployment.outputs.name  
     appInsightsConnectionString: appInsightsDeployment.outputs.connectionString    
+  }
+}
+
+
+// modules
+module appServicePlanDeployment 'modules/appServicePlan.bicep' = {
+  name: 'asp-func-module'
+  params: {
+    conventions: conventions
+    resourceGroupName: resourceNames.resourceGroup 
+    appServicePlanSkuName: 'WS1'
   }
 }
 
