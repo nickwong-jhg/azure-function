@@ -7,26 +7,14 @@ param resourceNames object
 @description('Generated storage account name')
 param storageAccountName string
 
-@description('App Service Plan SKU Name')
-param appServicePlanSkuName string = 'Y1'
-
-@description('App Service Plan SKU Tier')
-param appServicePlanSkuTier string = 'Dynamic'
+@description('appServicePlanId')
+param appServicePlanId string
 
 @description('appInsights connection string')
 param appInsightsConnectionString string
 
 var storageAccountConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${listKeys(resourceId(resourceGroup().name, 'Microsoft.Storage/storageAccounts', storageAccountName), '2019-04-01').keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
-  name: '${resourceNames.resourceGroup}-plan'
-  location: conventions.location
-  tags: conventions.baseTags
-  sku: {
-    name: appServicePlanSkuName
-    tier: appServicePlanSkuTier
-  }  
-}
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-10-01' existing = {
   name: resourceNames.logAnalyticsName
@@ -51,7 +39,7 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
       netFrameworkVersion: 'v8.0'
     }
     httpsOnly: true
-    serverFarmId: appServicePlan.id
+    serverFarmId: appServicePlanId
     clientAffinityEnabled: false
   }
 }

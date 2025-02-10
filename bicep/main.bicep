@@ -54,11 +54,33 @@ module appInsightsDeployment 'modules/appInsights.bicep' = {
   }
 }
 
+// modules
+module appServicePlanDeployment 'modules/appServicePlan.bicep' = {
+  name: 'asp-module'
+  params: {
+    conventions: conventions
+    resourceGroupName: resourceNames.resourceGroup 
+    appServicePlanSkuName: 'WS1'
+  }
+}
+
+module logicAppDeployment 'modules/logicAppStd.bicep' = {
+  name: take('fa-module-${deploymentSuffix}', 64)
+  params: {
+    conventions: conventions
+    resourceNames: resourceNames
+    appServicePlanId: appServicePlanDeployment.outputs.id
+    storageAccountName: storageAccountDeployment.outputs.name  
+    appInsightsConnectionString: appInsightsDeployment.outputs.connectionString    
+  }
+}
+
 module functionAppDeployment 'modules/functionApp.bicep' = {
   name: take('fa-module-${deploymentSuffix}', 64)
   params: {
     conventions: conventions
     resourceNames: resourceNames
+    appServicePlanId: appServicePlanDeployment.outputs.id
     storageAccountName: storageAccountDeployment.outputs.name  
     appInsightsConnectionString: appInsightsDeployment.outputs.connectionString    
   }
