@@ -12,7 +12,7 @@ param appServicePlanSkuTier string = 'Dynamic'
 
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
-  name: '${resourceGroupName}-plan'
+  name: '${resourceGroupName}-${appServicePlanSkuName}-${appServicePlanSkuTier}-plan'
   location: conventions.location
   tags: conventions.baseTags
   sku: {
