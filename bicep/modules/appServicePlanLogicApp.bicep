@@ -5,7 +5,7 @@ param conventions object
 param resourceGroupName string 
 
 @description('App Service Plan SKU Name')
-param appServicePlanSkuName string = 'W1'
+param appServicePlanSkuName string = 'WS1'
 
 @description('App Service Plan SKU Tier')
 param appServicePlanSkuTier string = 'Dynamic'
